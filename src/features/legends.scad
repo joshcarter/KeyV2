@@ -1,9 +1,10 @@
-module keytext(text, position, font_size, font_face, depth) {
+module keytext(text, position, font_size, font_face, depth, rotation=0) {
   woffset = (top_total_key_width()/3.5) * position[0];
   hoffset = (top_total_key_height()/3.5) * -position[1];
   translate([woffset, hoffset, -depth]){
     color($tertiary_color) linear_extrude(height=$dish_depth + depth){
-      text(text=text, font=font_face, size=font_size, halign="center", valign="center");
+      rotate([0, 0, rotation])
+        text(text=text, font=font_face, size=font_size, halign="center", valign="center");
     }
   }
 }
@@ -12,14 +13,14 @@ module legends(depth=0) {
   if (len($front_legends) > 0) {
     front_of_key() {
       for (i=[0:len($front_legends)-1]) {
-        rotate([90,0,0]) keytext($front_legends[i][0], $front_legends[i][1], $front_legends[i][2], $front_legends[i][3], depth);
+        rotate([90,0,0]) keytext($front_legends[i][0], $front_legends[i][1], $front_legends[i][2], $front_legends[i][3], depth, len($front_legends[i]) > 4 ? $front_legends[i][4] : 0);
   	  }
     }
   }
   if (len($legends) > 0) {
     top_of_key() {
       for (i=[0:len($legends)-1]) {
-        keytext($legends[i][0], $legends[i][1], $legends[i][2], $legends[i][3], depth);
+        keytext($legends[i][0], $legends[i][1], $legends[i][2], $legends[i][3], depth, len($legends[i]) > 4 ? $legends[i][4] : 0);
       }
     }
   }

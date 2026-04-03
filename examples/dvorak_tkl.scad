@@ -17,7 +17,7 @@ include <../includes.scad>
 // ===== Configuration =====
 
 // Which keyboard row to render
-render_row = "mods"; // [function, numbers, top_alpha, home, bottom, mods, nav]
+render_row = "test"; // [function, numbers, top_alpha, home, bottom, mods, nav, test]
 
 // Part to render: "body" for opaque shell, "shine" for translucent interior
 part = "shine"; // [body, shine]
@@ -39,7 +39,7 @@ icons = "Material Icons Outlined:style=Regular";
 module dk(primary, katakana, x, row, w=1, bump=false) {
   translate_u(x, 0) u(w) rounded_cherry() jdc_row(row) {
     $key_bump = bump;
-    $key_bump_depth = 0.8;  // mm height above surface
+    $key_bump_depth = 0.6;  // mm height above surface
     $key_bump_edge = 2.0;   // mm from front edge
     legend(primary, [-0.6, 0.6], size=5, font=exo)
       legend(katakana, [0.6, -0.6], size=4, font=kata)
@@ -48,7 +48,7 @@ module dk(primary, katakana, x, row, w=1, bump=false) {
 }
 
 // Single text legend key (centered)
-module tk(label, x, row, w=1, sz=4.5) {
+module tk(label, x, row, w=1, sz=4) {
   translate_u(x, 0) u(w) rounded_cherry() jdc_row(row)
     legend(label, [0, 0], size=sz, font=exo)
       shine_through_key(part, skin);
@@ -62,9 +62,9 @@ module pk(primary, x, row, w=1, sz=5) {
 }
 
 // Icon legend key (centered)
-module ik(icon_code, x, row, w=1, sz=7) {
+module ik(icon_code, x, row, w=1, sz=6, rot=0) {
   translate_u(x, 0) u(w) rounded_cherry() jdc_row(row)
-    legend(icon_code, [0, 0], size=sz, font=icons)
+    legend(icon_code, [0, 0], size=sz, font=icons, rotation=rot)
       shine_through_key(part, skin);
 }
 
@@ -80,22 +80,22 @@ module bk(x, row, w=1) {
 module function_row() {
   r = 1;
   // Esc
-  tk("Esc", 0, r, sz=5);
+  ik("\uf182", 0, r, rot=45);
   // F1-F4
-  tk("F1", 1, r, sz=5);
-  tk("F2", 2, r, sz=5);
-  tk("F3", 3, r, sz=5);
-  tk("F4", 4, r, sz=5);
+  tk("F1", 1, r);
+  tk("F2", 2, r);
+  tk("F3", 3, r);
+  tk("F4", 4, r);
   // F5-F8
-  tk("F5", 5, r, sz=5);
-  tk("F6", 6, r, sz=5);
-  tk("F7", 7, r, sz=5);
-  tk("F8", 8, r, sz=5);
+  tk("F5", 5, r);
+  tk("F6", 6, r);
+  tk("F7", 7, r);
+  tk("F8", 8, r);
   // F9-F12
-  tk("F9",  9, r, sz=5);
-  tk("F10", 10, r, sz=5);
-  tk("F11", 11, r, sz=5);
-  tk("F12", 12, r, sz=5);
+  tk("F9",  9, r);
+  tk("F10", 10, r);
+  tk("F11", 11, r);
+  tk("F12", 12, r);
 }
 
 module number_row() {
@@ -178,7 +178,7 @@ module bottom_row() {
   // JIS katakana:      ツ サ ソ ヒ コ ミ モ ネ ル メ
 
   // Left Shift (2.25u)
-  bk(0.625, r, w=2.25, sz=4.5);
+  bk(0.625, r, w=2.25);
   // Bottom row alpha
   dk(";", "ツ",  2.25, r);
   dk("q", "サ",  3.25, r);
@@ -191,7 +191,7 @@ module bottom_row() {
   dk("v", "ル", 10.25, r);
   dk("z", "メ", 11.25, r);
   // Right Shift (2.75u)
-  bk(13.125, r, w=2.75, sz=4.5);
+  bk(13.125, r, w=2.75);
 }
 
 module mods_row() {
@@ -199,34 +199,41 @@ module mods_row() {
   // Positions: 3 x 1.25u + 6.25u space + 4 x 1.25u + 3 x 1u arrows
   // Drop CTRL bottom: LCtrl Win LAlt Space RAlt Fn Menu RCtrl
 
-  ik("\uEAE6", 0.125,  r, w=1.25, sz=6); // control
-  ik("\uEAE7",  1.375,  r, w=1.25, sz=6); // windows/command
-  ik("\uEAE8",  2.625,  r, w=1.25, sz=6); // alt
-  bk(6.375, r, w=6.25);                    // Spacebar (blank)
-  ik("\uEAE8",  10.125, r, w=1.25, sz=6);  //alt
-  ik("\uE312",   11.375, r, w=1.25, sz=6);     // fn
-  ik("\uE896", 12.625, r, w=1.25, sz=6); // menu
-  ik("\uEAE6", 13.875, r, w=1.25, sz=6); //control
+  ik("\uEAE6", 0.125,  r, w=1.25);   // control
+  ik("\uEAE7",  1.375,  r, w=1.25);  // windows/command
+  ik("\uEAE8",  2.625,  r, w=1.25);  // alt
+  bk(6.375, r, w=6.25);              // Spacebar (blank)
+  ik("\uEAE8",  10.125, r, w=1.25);  //alt
+  ik("\uE312",   11.375, r, w=1.25); // fn
+  ik("\uE896", 12.625, r, w=1.25);   // menu
+  ik("\uEAE6", 13.875, r, w=1.25);   //control
 }
 
 module nav_cluster() {
   // PrtSc / ScrLk / Pause (row 1 profile)
-  tk("PrtSc", 0, 1, sz=3.5);
-  tk("ScrLk", 1, 1, sz=3.5);
-  tk("Pause", 2, 1, sz=3.5);
+  ik("\ue8ad", 0, 1, sz=5); //print 
+  ik("\ue897", 1, 1, sz=5); //scroll
+  ik("\ue034", 2, 1, sz=5); //pause
   // Ins / Home / PgUp (row 1 profile)
-  tk("Ins",  3, 1, sz=4);
-  tk("Home", 4, 1, sz=4);
-  tk("PgUp", 5, 1, sz=3.5);
+  ik("\uE089", 3, 1, sz=5); // insert
+  ik("\uEACF", 4, 1, sz=5, rot=90); //home
+  ik("\uEACF", 5, 1, sz=5); //page up
   // Del / End / PgDn (row 2 profile)
-  tk("Del",  6, 2, sz=4.5);
-  tk("End",  7, 2, sz=4.5);
-  tk("PgDn", 8, 2, sz=3.5);
+  ik("\uE14A",  6, 2, sz=5, rot=180); //delete
+  ik("\uEACF",  7, 2, sz=5, rot=270); //end
+  ik("\uEACF", 8, 2, sz=5, rot=180); //page down
   // Arrow keys (row 4 profile)
   ik("\uE316",  9, 4);   // Up
   ik("\uE314", 10, 4);   // Left
   ik("\uE313", 11, 4);   // Down
   ik("\uE315", 12, 4);   // Right
+}
+
+module test() {
+  ik("\uf182", 0, row=1, rot=45);
+  ik("\uE31C", 1.25, row=2, w=1.5);
+  dk("a", "チ",  2.5, row=3);
+  ik("\uEAE7",  3.625,  row=4, w=1.25);  // windows/command
 }
 
 
@@ -239,3 +246,4 @@ if (render_row == "home")      home_row();
 if (render_row == "bottom")    bottom_row();
 if (render_row == "mods")      mods_row();
 if (render_row == "nav")       nav_cluster();
+if (render_row == "test")      test();
