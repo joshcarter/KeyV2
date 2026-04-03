@@ -232,6 +232,36 @@ module outer_total_shape(inset=false) {
   };
 }
 
+// Shine-through multimaterial keycap for multi-tool printers.
+// Splits a keycap into two parts for opaque + translucent filament:
+//   part="body"  -> thin opaque outer shell with legend-shaped openings
+//   part="shine" -> translucent interior (walls, stem, supports, legend fills)
+// See examples/shine_through_multimaterial.scad for usage.
+module shine_through_key(part="body", skin=1.0) {
+  legend_depth = skin + 0.1;
+
+  if (part == "body") {
+    difference() {
+      outer_shape();
+      shape(skin * 2, skin);
+      dished() {
+        legends(legend_depth);
+      }
+    }
+  } else {
+    intersection() {
+      key();
+      shape(skin * 2, skin);
+    }
+    intersection() {
+      outer_shape();
+      dished() {
+        legends(legend_depth);
+      }
+    }
+  }
+}
+
 // The final, penultimate key generation function.
 // takes all the bits and glues them together. requires configuration with special variables.
 module key(inset=false) {
