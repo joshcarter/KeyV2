@@ -36,12 +36,26 @@ skin = 1.0; // [0.4:0.1:2.0]
 // ===== Example: Dvorak home row =====
 
 exo = "Exo 2 Semi Bold:style=Semi Bold";
+katakana_font = "Hiragino Sans:style=W7";
 
 dvorak_home = ["a", "o", "e"];
+jis_home = ["チ", "ト", "シ"];
 
 for (x = [0:len(dvorak_home)-1]) {
   translate_u(x, 0) rounded_cherry() jdc_row(3)
-    legend(dvorak_home[x], [-0.5, 0.5], size=6, font=exo) {
-        shine_through_key(part, skin);
-  }
+    legend(dvorak_home[x], [-0.6, 0.6], size=5, font=exo)
+        legend(jis_home[x], [0.6, -0.6], size=4, font=katakana_font)
+            shine_through_key(part, skin);
+
 }
+
+translate_u(3, 0) rounded_cherry() jdc_row(3) {
+    legend("ハ", [0.6, -0.6], size=4, font=katakana_font) {
+        legend("u", [-0.6, 0.6], size=5, font=exo) {
+          $key_bump = true;
+          $key_bump_depth = 0.8;  // mm height above surface
+          $key_bump_edge = 2.0;   // mm from front edge
+          shine_through_key(part, skin);
+        }
+      }
+      }

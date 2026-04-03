@@ -242,7 +242,11 @@ module shine_through_key(part="body", skin=1.0) {
 
   if (part == "body") {
     difference() {
-      outer_shape();
+      union() {
+        outer_shape();
+        // homing bump is part of the opaque shell
+        if ($key_bump) top_of_key() keybump($key_bump_depth, $key_bump_edge);
+      }
       shape(skin * 2, skin);
       dished() {
         legends(legend_depth);
