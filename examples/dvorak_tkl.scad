@@ -49,29 +49,41 @@ module dk(primary, katakana, x, row, w=1, bump=false) {
 
 // Single text legend key (centered)
 module tk(label, x, row, w=1, sz=4) {
-  translate_u(x, 0) u(w) rounded_cherry() jdc_row(row)
+  translate_u(x, 0) u(w) rounded_cherry() jdc_row(row) {
+    $stabilizer_type = "cherry_stabilizer";
+    $stabilizers = w >= 6 ? [[-50,0],[50,0]] : w >= 2 ? [[-12,0],[12,0]] : [];
     legend(label, [0, 0], size=sz, font=exo)
       shine_through_key(part, skin);
+  }
 }
 
 // Single text legend key (top-left, no katakana)
 module pk(primary, x, row, w=1, sz=5) {
-  translate_u(x, 0) u(w) rounded_cherry() jdc_row(row)
+  translate_u(x, 0) u(w) rounded_cherry() jdc_row(row) {
+    $stabilizer_type = "cherry_stabilizer";
+    $stabilizers = w >= 6 ? [[-50,0],[50,0]] : w >= 2 ? [[-12,0],[12,0]] : [];
     legend(primary, [-0.6, 0.6], size=sz, font=exo)
       shine_through_key(part, skin);
+  }
 }
 
 // Icon legend key (centered)
 module ik(icon_code, x, row, w=1, sz=6, rot=0) {
-  translate_u(x, 0) u(w) rounded_cherry() jdc_row(row)
+  translate_u(x, 0) u(w) rounded_cherry() jdc_row(row) {
+    $stabilizer_type = "cherry_stabilizer";
+    $stabilizers = w >= 6 ? [[-50,0],[50,0]] : w >= 2 ? [[-12,0],[12,0]] : [];
     legend(icon_code, [0, 0], size=sz, font=icons, rotation=rot)
       shine_through_key(part, skin);
+  }
 }
 
 // Blank key (no legend)
 module bk(x, row, w=1) {
-  translate_u(x, 0) u(w) rounded_cherry() jdc_row(row)
+  translate_u(x, 0) u(w) rounded_cherry() jdc_row(row) {
+    $stabilizer_type = "cherry_stabilizer";
+    $stabilizers = w >= 6 ? [[-50,0],[50,0]] : w >= 2 ? [[-12,0],[12,0]] : [];
     shine_through_key(part, skin);
+  }
 }
 
 
