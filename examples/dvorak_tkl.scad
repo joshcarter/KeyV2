@@ -17,7 +17,7 @@ include <../includes.scad>
 // ===== Configuration =====
 
 // Which keyboard row to render
-render_row = "bottom"; // [function, numbers, top_alpha, home, bottom, mods, nav, test, slop]
+render_row = "mods"; // [function, numbers, top_alpha, home, bottom, mods, nav, test, slop]
 
 // Part to render: "body" for opaque shell, "shine" for translucent interior
 part = "shine"; // [body, shine]
@@ -28,6 +28,12 @@ skin = 1.0; // [0.4:0.1:2.0]
 // Tilt keycaps so the top surface is flat on the print bed.
 // The bottom becomes angled; use supports when printing.
 flat_top = true; // [true, false]
+
+// Stem fit (adjust for your printer)
+$stem_inner_slop = 0.1; // mm
+
+// This seems to work better than the stabilizer stems
+$stabilizer_type = "rounded_cherry";
 
 
 // ===== Fonts =====
@@ -56,7 +62,6 @@ module dk(primary, katakana, x, row, w=1, bump=false) {
     $key_bump = bump;
     $key_bump_depth = 0.6;  // mm height above surface
     $key_bump_edge = 2.0;   // mm from front edge
-    $stabilizer_type = "cherry_stabilizer";
     $stabilizers = w >= 6 ? [[-50,0],[50,0]] : w >= 2 ? [[-12,0],[12,0]] : [];
     legend(primary, [-0.6, 0.6], size=5, font=exo)
       legend(katakana, [0.6, -0.6], size=4, font=kata)
@@ -67,7 +72,6 @@ module dk(primary, katakana, x, row, w=1, bump=false) {
 // Single text legend key (centered)
 module tk(label, x, row, w=1, sz=4) {
   translate_u(x, 0) u(w) rounded_cherry() jdc_row(row) {
-    $stabilizer_type = "cherry_stabilizer";
     $stabilizers = w >= 6 ? [[-50,0],[50,0]] : w >= 2 ? [[-12,0],[12,0]] : [];
     legend(label, [0, 0], size=sz, font=exo)
       orient() shine_through_key(part, skin);
@@ -77,7 +81,6 @@ module tk(label, x, row, w=1, sz=4) {
 // Single text legend key (top-left, no katakana)
 module pk(primary, x, row, w=1, sz=5) {
   translate_u(x, 0) u(w) rounded_cherry() jdc_row(row) {
-    $stabilizer_type = "cherry_stabilizer";
     $stabilizers = w >= 6 ? [[-50,0],[50,0]] : w >= 2 ? [[-12,0],[12,0]] : [];
     legend(primary, [-0.6, 0.6], size=sz, font=exo)
       orient() shine_through_key(part, skin);
@@ -87,7 +90,6 @@ module pk(primary, x, row, w=1, sz=5) {
 // Icon legend key (centered)
 module ik(icon_code, x, row, w=1, sz=6, rot=0) {
   translate_u(x, 0) u(w) rounded_cherry() jdc_row(row) {
-    $stabilizer_type = "cherry_stabilizer";
     $stabilizers = w >= 6 ? [[-50,0],[50,0]] : w >= 2 ? [[-12,0],[12,0]] : [];
     legend(icon_code, [0, 0], size=sz, font=icons, rotation=rot)
       orient() shine_through_key(part, skin);
@@ -95,10 +97,10 @@ module ik(icon_code, x, row, w=1, sz=6, rot=0) {
 }
 
 // Blank key (no legend)
-module bk(x, row, w=1) {
+module bk(x, row, w=1, dish=true) {
   translate_u(x, 0) u(w) rounded_cherry() jdc_row(row) {
-    $stabilizer_type = "cherry_stabilizer";
     $stabilizers = w >= 6 ? [[-50,0],[50,0]] : w >= 2 ? [[-12,0],[12,0]] : [];
+    $dish_type = dish ? $dish_type : "disable";
     orient() shine_through_key(part, skin);
   }
 }
@@ -231,7 +233,7 @@ module mods_row() {
   ik("\uEAE6", 0.125,  r, w=1.25);   // control
   ik("\uEAE7",  1.375,  r, w=1.25);  // windows/command
   ik("\uEAE8",  2.625,  r, w=1.25);  // alt
-  bk(6.375, r, w=6.25);              // space bar
+  bk(6.375, r, w=6.25, dish=false);  // space bar
   ik("\uEAE8",  10.125, r, w=1.25);  // alt
   ik("\uE312",   11.375, r, w=1.25); // fn
   ik("\uE896", 12.625, r, w=1.25);   // menu
@@ -259,10 +261,18 @@ module nav_cluster() {
 }
 
 module test() {
-  ik("\uf182", 0, row=1, rot=45);
-  ik("\uE31C", 1.25, row=2, w=1.5);
-  dk("a", "チ",  2.5, row=3);
-  ik("\uEAE7",  3.625,  row=4, w=1.25);  // windows/command
+    r = 3;
+  //ik("\uf182", 0, row=1, rot=45);
+  //ik("\uE31C", 1.25, row=2, w=1.5);
+  //dk("a", "チ",  2.5, row=3);
+  //ik("\uEAE7",  3.625,  row=4, w=1.25);  // windows/command
+  
+  // enter
+  // ik("\uE31B", 1.125, r, w=2.25);
+  // Left Shift (2.25u)
+  bk(1, r, w=2.25);
+  // Right Shift (2.75u)
+  bk(3.5, r, w=2.75);
 }
 
 module slop_test() {

@@ -263,6 +263,20 @@ module shine_through_key(part="body", skin=1.0) {
         legends(legend_depth);
       }
     }
+    // thin bar spanning full key width, connecting stabilizer stems
+    if (len($stabilizers) > 0) {
+      intersection() {
+        shape(skin * 2, skin);
+        difference() {
+          translate([0, 0, $stem_support_height/2])
+            cube([total_key_width()*2, 0.5, $stem_support_height], center=true);
+          inside_cherry_cross($stem_inner_slop);
+          for (pos = $stabilizers) {
+            translate([pos[0], pos[1], 0]) inside_cherry_cross($stem_inner_slop);
+          }
+        }
+      }
+    }
   }
 }
 
