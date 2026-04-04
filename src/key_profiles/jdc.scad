@@ -15,10 +15,10 @@ module jdc_row(row=3, column = 0) {
   $width_difference = 4;
   $height_difference = 4;
   $keytop_thickness = 2.0;
-  $top_tilt = row == 5 ? -21 : (row-3) * 7;
+  $top_tilt = 0; // DSA: row == 5 ? -21 : (row-3) * 7;
   $top_skew = 0;
   $dish_type = "squared scoop";
-  $dish_depth = 1.0;
+  $dish_depth = 0.8;
   $dish_skew_x = 0;
   $dish_skew_y = 0;
   $height_slices = 10;

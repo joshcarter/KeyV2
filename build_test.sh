@@ -7,7 +7,7 @@ OUTPUT_DIR="${1:-output/dvorak_tkl}"
 
 mkdir -p "$OUTPUT_DIR"
 
-ROWS="test"
+ROWS="test slop"
 PARTS="body shine"
 
 echo "Rendering Dvorak TKL layout -> $OUTPUT_DIR/"

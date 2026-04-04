@@ -17,13 +17,17 @@ include <../includes.scad>
 // ===== Configuration =====
 
 // Which keyboard row to render
-render_row = "test"; // [function, numbers, top_alpha, home, bottom, mods, nav, test]
+render_row = "bottom"; // [function, numbers, top_alpha, home, bottom, mods, nav, test, slop]
 
 // Part to render: "body" for opaque shell, "shine" for translucent interior
 part = "shine"; // [body, shine]
 
 // Opaque shell thickness (mm)
 skin = 1.0; // [0.4:0.1:2.0]
+
+// Tilt keycaps so the top surface is flat on the print bed.
+// The bottom becomes angled; use supports when printing.
+flat_top = true; // [true, false]
 
 
 // ===== Fonts =====
@@ -35,15 +39,28 @@ icons = "Material Icons Outlined:style=Regular";
 
 // ===== Helper modules =====
 
+// Counter-rotate keycap so the dished top surface sits flat on the
+// print bed. The angled bottom will need supports when printing.
+// No-op when flat_top is false or top_tilt is zero (row 3).
+module orient() {
+  if (flat_top) {
+    rotate([$top_tilt / $key_height, 0, 0]) children();
+  } else {
+    children();
+  }
+}
+
 // Dual-legend key: Dvorak primary (top-left) + katakana (bottom-right)
 module dk(primary, katakana, x, row, w=1, bump=false) {
   translate_u(x, 0) u(w) rounded_cherry() jdc_row(row) {
     $key_bump = bump;
     $key_bump_depth = 0.6;  // mm height above surface
     $key_bump_edge = 2.0;   // mm from front edge
+    $stabilizer_type = "cherry_stabilizer";
+    $stabilizers = w >= 6 ? [[-50,0],[50,0]] : w >= 2 ? [[-12,0],[12,0]] : [];
     legend(primary, [-0.6, 0.6], size=5, font=exo)
       legend(katakana, [0.6, -0.6], size=4, font=kata)
-        shine_through_key(part, skin);
+        orient() shine_through_key(part, skin);
   }
 }
 
@@ -53,7 +70,7 @@ module tk(label, x, row, w=1, sz=4) {
     $stabilizer_type = "cherry_stabilizer";
     $stabilizers = w >= 6 ? [[-50,0],[50,0]] : w >= 2 ? [[-12,0],[12,0]] : [];
     legend(label, [0, 0], size=sz, font=exo)
-      shine_through_key(part, skin);
+      orient() shine_through_key(part, skin);
   }
 }
 
@@ -63,7 +80,7 @@ module pk(primary, x, row, w=1, sz=5) {
     $stabilizer_type = "cherry_stabilizer";
     $stabilizers = w >= 6 ? [[-50,0],[50,0]] : w >= 2 ? [[-12,0],[12,0]] : [];
     legend(primary, [-0.6, 0.6], size=sz, font=exo)
-      shine_through_key(part, skin);
+      orient() shine_through_key(part, skin);
   }
 }
 
@@ -73,7 +90,7 @@ module ik(icon_code, x, row, w=1, sz=6, rot=0) {
     $stabilizer_type = "cherry_stabilizer";
     $stabilizers = w >= 6 ? [[-50,0],[50,0]] : w >= 2 ? [[-12,0],[12,0]] : [];
     legend(icon_code, [0, 0], size=sz, font=icons, rotation=rot)
-      shine_through_key(part, skin);
+      orient() shine_through_key(part, skin);
   }
 }
 
@@ -82,7 +99,7 @@ module bk(x, row, w=1) {
   translate_u(x, 0) u(w) rounded_cherry() jdc_row(row) {
     $stabilizer_type = "cherry_stabilizer";
     $stabilizers = w >= 6 ? [[-50,0],[50,0]] : w >= 2 ? [[-12,0],[12,0]] : [];
-    shine_through_key(part, skin);
+    orient() shine_through_key(part, skin);
   }
 }
 
@@ -214,11 +231,11 @@ module mods_row() {
   ik("\uEAE6", 0.125,  r, w=1.25);   // control
   ik("\uEAE7",  1.375,  r, w=1.25);  // windows/command
   ik("\uEAE8",  2.625,  r, w=1.25);  // alt
-  bk(6.375, r, w=6.25);              // Spacebar (blank)
-  ik("\uEAE8",  10.125, r, w=1.25);  //alt
+  bk(6.375, r, w=6.25);              // space bar
+  ik("\uEAE8",  10.125, r, w=1.25);  // alt
   ik("\uE312",   11.375, r, w=1.25); // fn
   ik("\uE896", 12.625, r, w=1.25);   // menu
-  ik("\uEAE6", 13.875, r, w=1.25);   //control
+  ik("\uEAE6", 13.875, r, w=1.25);   // control
 }
 
 module nav_cluster() {
@@ -248,6 +265,17 @@ module test() {
   ik("\uEAE7",  3.625,  row=4, w=1.25);  // windows/command
 }
 
+module slop_test() {
+  slops = [0.2, 0.15, 0.1];
+  for (i = [0:len(slops)-1]) {
+    translate_u(i, 0) rounded_cherry() jdc_row(3) {
+      $stem_inner_slop = slops[i];
+      legend(str(slops[i]), [0, 0], size=5, font=exo)
+        orient() shine_through_key(part, skin);
+    }
+  }
+}
+
 
 // ===== Render selected row =====
 
@@ -259,3 +287,4 @@ if (render_row == "bottom")    bottom_row();
 if (render_row == "mods")      mods_row();
 if (render_row == "nav")       nav_cluster();
 if (render_row == "test")      test();
+if (render_row == "slop")      slop_test();
