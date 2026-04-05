@@ -17,7 +17,7 @@ include <../includes.scad>
 // ===== Configuration =====
 
 // Which keyboard row to render
-render_row = "mods"; // [function, numbers, top_alpha, home, bottom, mods, nav, test, slop]
+render_row = "numbers"; // [function, numbers, top_alpha, home, bottom, mods, nav, test, slop]
 
 // Part to render: "body" for opaque shell, "shine" for translucent interior
 part = "shine"; // [body, shine]
@@ -39,6 +39,7 @@ $stabilizer_type = "rounded_cherry";
 // ===== Fonts =====
 
 exo = "Exo 2 Semi Bold:style=Semi Bold";
+exobold = "Exo 2 Semi Bold:style=Bold";
 kata = "Hiragino Sans:style=W7";
 icons = "Material Icons Outlined:style=Regular";
 
@@ -53,6 +54,17 @@ module orient() {
     rotate([$top_tilt / $key_height, 0, 0]) children();
   } else {
     children();
+  }
+}
+
+// Three-legend key: primary (top-left) + shifted (bottom-left) + katakana (bottom-right)
+module sk(primary, shifted, katakana, x, row, w=1) {
+  translate_u(x, 0) u(w) rounded_cherry() jdc_row(row) {
+    $stabilizers = w >= 6 ? [[-50,0],[50,0]] : w >= 2 ? [[-12,0],[12,0]] : [];
+    legend(primary, [-0.65, 0.65], size=4, font=exobold)
+      legend(shifted, [-0.65, -0.65], size=4, font=exobold)
+        legend(katakana, [0.6, -0.6], size=4, font=kata)
+          orient() shine_through_key(part, skin);
   }
 }
 
@@ -135,19 +147,19 @@ module number_row() {
   // Dvorak number row: ` 1 2 3 4 5 6 7 8 9 0 [ ]
   // JIS katakana:        ヌ フ ア ウ エ オ ヤ ユ ヨ ワ ホ ヘ
 
-  pk("`",  0, r);
-  dk("1", "ヌ",  1, r);
-  dk("2", "フ",  2, r);
-  dk("3", "ア",  3, r);
-  dk("4", "ウ",  4, r);
-  dk("5", "エ",  5, r);
-  dk("6", "オ",  6, r);
-  dk("7", "ヤ",  7, r);
-  dk("8", "ユ",  8, r);
-  dk("9", "ヨ",  9, r);
-  dk("0", "ワ", 10, r);
-  dk("[", "ホ", 11, r);
-  dk("]", "ヘ", 12, r);
+  sk("`", "~", "",   0, r);
+  sk("1", "!", "ヌ",  1, r);
+  sk("2", "@", "フ",  2, r);
+  sk("3", "#", "ア",  3, r);
+  sk("4", "$", "ウ",  4, r);
+  sk("5", "%", "エ",  5, r);
+  sk("6", "^", "オ",  6, r);
+  sk("7", "&", "ヤ",  7, r);
+  sk("8", "*", "ユ",  8, r);
+  sk("9", "(", "ヨ",  9, r);
+  sk("0", ")", "ワ", 10, r);
+  sk("[", "{", "ホ", 11, r);
+  sk("]", "}", "ヘ", 12, r);
   // Backspace (2u) - backspace icon U+E14A
   ik("\uE14A", 13.5, r, w=2);
 }
@@ -161,9 +173,9 @@ module top_alpha_row() {
   // Tab (1.5u) - keyboard_tab icon U+E31C
   ik("\uE31C", 0.25, r, w=1.5);
   // Alpha keys
-  dk("'", "タ",  1.5, r);
-  dk(",", "テ",  2.5, r);
-  dk(".", "イ",  3.5, r);
+  sk("'", "\"", "タ",  1.5, r);
+  sk(",", "<", "テ",  2.5, r);
+  sk(".", ">", "イ",  3.5, r);
   dk("p", "ス",  4.5, r);
   dk("y", "カ",  5.5, r);
   dk("f", "ン",  6.5, r);
@@ -171,10 +183,10 @@ module top_alpha_row() {
   dk("c", "ニ",  8.5, r);
   dk("r", "ラ",  9.5, r);
   dk("l", "セ", 10.5, r);
-  dk("/", "゛", 11.5, r);
-  dk("=", "゜", 12.5, r);
+  sk("/", "?", "゛", 11.5, r);
+  sk("=", "+", "゜", 12.5, r);
   // Backslash (1.5u) - no katakana equivalent on ANSI
-  pk("\\", 13.75, r, w=1.5);
+  sk("\\", "|", "", 13.75, r, w=1.5);
 }
 
 module home_row() {
@@ -197,7 +209,7 @@ module home_row() {
   dk("t", "ノ",  8.75, r);
   dk("n", "リ",  9.75, r);
   dk("s", "レ", 10.75, r);
-  dk("-", "ケ", 11.75, r);
+  sk("-", "_", "ケ", 11.75, r);
   // Enter (2.25u) - keyboard_return icon U+E31B
   ik("\uE31B", 13.375, r, w=2.25);
 }
@@ -211,7 +223,7 @@ module bottom_row() {
   // Left Shift (2.25u)
   bk(0.625, r, w=2.25);
   // Bottom row alpha
-  dk(";", "ツ",  2.25, r);
+  sk(";", ":", "ツ",  2.25, r);
   dk("q", "サ",  3.25, r);
   dk("j", "ソ",  4.25, r);
   dk("k", "ヒ",  5.25, r);
