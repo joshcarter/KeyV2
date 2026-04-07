@@ -49,6 +49,11 @@ module vertically_stabilized(mm=12, vertical=true, type=undef) {
   }
 }
 
+module auto_stabilized(w) {
+  $stabilizers = w >= 6 ? [[-50,0],[50,0]] : w >= 2 ? [[-12,0],[12,0]] : [];
+  children();
+}
+
 module stabilized(mm=12, vertical = false, type=undef) {
   if (vertical) {
     $stabilizer_type = (type ? type : ($stabilizer_type ? $stabilizer_type : "costar_stabilizer"));

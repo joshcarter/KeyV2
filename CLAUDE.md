@@ -36,6 +36,46 @@ special variable (`$var`) inheritance system for configuration.
 - **Named parameters in OpenSCAD**: must match formal parameter names exactly.
   `ik(..., r=1)` will NOT set `row` — use `row=1`.
 
+## Three-Layer Keyboard Architecture
+
+Custom keyboard layouts use a three-layer dependency-injection pattern:
+
+1. **Physical Keyboard** (`src/keyboards/`) — WHERE keys go + WHAT role each serves.
+   Calls five abstract key-role modules: `alpha()`, `shifted()`, `modifier()`, `icon()`,
+   `blank()`. Contains positions, widths, row assignments, and legend content. Does NOT
+   contain fonts, legend positioning, profile, or render logic.
+
+2. **Legend Style** (`src/styles/`) — HOW each key role looks. Implements all five modules.
+   Encodes profile selection, fonts/sizes, legend positions/alignment, render method, and
+   homing treatment.
+
+3. **Assembly** (`examples/`) — Thin file: `include` keyboard + style, set config
+   (`render_row`, `part`, etc.), call the keyboard's row dispatcher.
+
+### Abstract Key-Role Interface
+
+```
+alpha(letter, x, row, w=1, sub="", homing=false, dish=false)
+shifted(primary, shift, x, row, w=1, sub="")
+modifier(label, icon_code, x, row, w=1)
+icon(icon_code, x, row, w=1, sz=6, rot=0)
+blank(x, row, w=1, dish=false)
+```
+
+- `sub` — optional sub-legend (katakana). JDC renders it; AEK ignores it.
+- `homing` — homing key. JDC adds bump bar; AEK adds squared scoop dish.
+- `dish` — style hint for selective dishing. JDC ignores; AEK applies squared scoop.
+- `auto_stabilized(w)` — sets `$stabilizers` based on key width (2u+ and 6u+ thresholds).
+
+### Available Keyboards and Styles
+
+- `src/keyboards/drop_ctrl_tkl.scad` — Drop CTRL 87-key, Dvorak + JIS katakana
+- `src/keyboards/kinesis_advantage2.scad` — Kinesis Advantage2 68-key, Dvorak
+- `src/styles/jdc_shine_through.scad` — JDC profile, Exo/Hiragino fonts, shine-through
+- `src/styles/aek_inset.scad` — AEK profile, Futura font, inset-color legends
+
+Note: `src/layouts/` is a separate, simpler data-driven layout system for uniform keyboards.
+
 ## Custom Additions (JDC project)
 
 ### JDC Profile (`src/key_profiles/jdc.scad`)
@@ -55,10 +95,16 @@ the `$legends` tuple. Used for rotated icons (e.g., flipped backspace for Delete
 
 ## Files
 
-- `examples/dvorak_tkl.scad` — full 87-key Drop CTRL layout, Dvorak + JIS katakana
+- `examples/jdc_dvorak_tkl.scad` — JDC shine-through assembly (keyboard + style)
+- `examples/aek_dvorak_tkl.scad` — AEK inset-color assembly (keyboard + style)
+- `examples/aek_kinesis.scad` — AEK Kinesis Advantage2 assembly
+- `examples/dvorak_tkl.scad` — (deprecated) old monolithic JDC layout
+- `examples/aek_tkl.scad` — (deprecated) old monolithic AEK layout
 - `examples/shine_through_multimaterial.scad` — small test-print file
 - `examples/font_test.scad` — font rendering tests
-- `build_dvorak_tkl.sh` — renders all row/part STL combinations in parallel
+- `build_dvorak_tkl.sh` — renders JDC Dvorak TKL (all row/part STLs in parallel)
+- `build_aek_tkl.sh` — renders AEK Dvorak TKL (all row/part STLs in parallel)
+- `build_kinesis.sh` — renders AEK Kinesis Advantage2 (all row/part STLs in parallel)
 - `build_shine_through.sh` — renders body/shine for the test file
 - `build_test.sh` — renders the test row
 

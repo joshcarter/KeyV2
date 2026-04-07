@@ -1,3 +1,6 @@
+// DEPRECATED: Use examples/jdc_dvorak_tkl.scad instead.
+// This file is kept temporarily for output verification comparison.
+
 include <../includes.scad>
 
 /* Dvorak TKL (87-key) layout with JIS katakana sub-legends

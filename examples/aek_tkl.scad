@@ -1,3 +1,6 @@
+// DEPRECATED: Use examples/aek_dvorak_tkl.scad instead.
+// This file is kept temporarily for output verification comparison.
+
 include <../includes.scad>
 
 /* AEK-inspired Dvorak TKL (87-key) layout
@@ -20,7 +23,7 @@ include <../includes.scad>
 // ===== Configuration =====
 
 // Which keyboard row to render
-render_row = "nav"; // [function, numbers, top_alpha, home, bottom, mods, nav, test]
+render_row = "home"; // [function, numbers, top_alpha, home, bottom, mods, nav, test]
 
 // Part to render: "body" for keycap shell, "legends" for colored legend fills
 part = "body"; // [body, legends]

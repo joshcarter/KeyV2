@@ -2,15 +2,16 @@
 set -euo pipefail
 
 OPENSCAD="${OPENSCAD:-/Applications/OpenSCAD.app/Contents/MacOS/OpenSCAD}"
-SCAD_FILE="examples/jdc_dvorak_tkl.scad"
-OUTPUT_DIR="${1:-output/dvorak_tkl}"
+SCAD_FILE="examples/aek_kinesis.scad"
+OUTPUT_DIR="${1:-output/kinesis}"
 
 mkdir -p "$OUTPUT_DIR"
 
-ROWS="function numbers top_alpha home bottom mods nav"
-PARTS="body shine"
+# ROWS="numbers top_alpha home bottom bottom_mods thumbs"
+ROWS="test"
+PARTS="body legends"
 
-echo "Rendering Dvorak TKL layout -> $OUTPUT_DIR/"
+echo "Rendering Kinesis Advantage2 layout -> $OUTPUT_DIR/"
 
 pids=()
 labels=()

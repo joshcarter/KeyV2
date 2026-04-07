@@ -2,7 +2,7 @@
 set -euo pipefail
 
 OPENSCAD="${OPENSCAD:-/Applications/OpenSCAD.app/Contents/MacOS/OpenSCAD}"
-SCAD_FILE="examples/aek_tkl.scad"
+SCAD_FILE="examples/aek_dvorak_tkl.scad"
 OUTPUT_DIR="${1:-output/aek_tkl}"
 
 mkdir -p "$OUTPUT_DIR"

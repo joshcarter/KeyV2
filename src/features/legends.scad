@@ -19,7 +19,8 @@ module keytext(text, position, font_size, font_face, depth, rotation=0, halign="
   translate([woffset, hoffset, -depth]){
     color($tertiary_color) linear_extrude(height=$dish_depth + depth){
       rotate([0, 0, rotation])
-        text(text=text, font=font_face, size=font_size, halign=halign, valign=valign);
+        let(text_valign = (valign == "bottom") ? "baseline" : valign)
+        text(text=text, font=font_face, size=font_size, halign=halign, valign=text_valign);
     }
   }
 }
