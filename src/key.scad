@@ -214,6 +214,19 @@ module stems_and_stabilizers() {
   translate([0, 0, $stem_inset]) {
     if ($stabilizer_type != "disable") stems_for($stabilizers, $stabilizer_type);
     if ($stem_type != "disable") stems_for($stem_positions, $stem_type);
+
+    // Horizontal connecting bar for 2u+ keys with stabilizers
+    // Spans between main stem and stabilizer stems for structural support
+    if (len($stabilizers) > 0 && $stem_support_type != "disable") {
+      difference() {
+        translate([0, 0, $stem_support_height/2])
+          cube([total_key_width()*2, 0.5, $stem_support_height], center=true);
+        inside_cherry_cross($stem_inner_slop);
+        for (pos = $stabilizers) {
+          translate([pos[0], pos[1], 0]) inside_cherry_cross($stem_inner_slop);
+        }
+      }
+    }
   }
 }
 

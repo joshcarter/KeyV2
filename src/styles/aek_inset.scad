@@ -39,8 +39,8 @@ module alpha(letter, x, row, w=1, sub="", homing=false, dish=false) {
 // Shifted key: primary bottom-left + shifted top-left (stacked left column)
 module shifted(primary, shift, x, row, w=1, sub="") {
   translate_u(x, 0) u(w) rounded_cherry() aek_row(row) auto_stabilized(w) {
-    legend(primary, [2, 2], size=5, font=_aek_futura, halign="left", valign="bottom")
-      legend(shift, [2, 2], size=5, font=_aek_futura, halign="left", valign="top")
+    legend(primary, [2, 1.5], size=4, font=_aek_futura, halign="left", valign="bottom")
+      legend(shift, [2, 1.5], size=4, font=_aek_futura, halign="left", valign="top")
         _aek_render();
   }
 }
@@ -48,8 +48,8 @@ module shifted(primary, shift, x, row, w=1, sub="") {
 // Modifier key: text label top-left + icon bottom-left, stacked left column
 module modifier(label, icon_code, x, row, w=1) {
   translate_u(x, 0) u(w) rounded_cherry() aek_row(row) auto_stabilized(w) {
-    legend(label, [2, 2], size=4, font=_aek_futura, halign="left", valign="bottom")
-      legend(icon_code, [2, 2], size=5, font=_aek_icons, halign="left", valign="top")
+    legend(label, [2, 1.5], size=4, font=_aek_futura, halign="left", valign="bottom")
+      legend(icon_code, [2, 1.5], size=5, font=_aek_icons, halign="left", valign="top")
         _aek_render();
   }
 }

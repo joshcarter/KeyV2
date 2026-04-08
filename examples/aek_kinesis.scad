@@ -9,7 +9,7 @@ include <../src/styles/aek_inset.scad>
 
 // ===== Configuration =====
 
-render_row = "test"; // [numbers, top_alpha, home, bottom, bottom_mods, thumbs, test]
+render_row = "left_top"; // [left_top, left_bottom, right_top, right_bottom, thumbs, test]
 part = "body";         // [body, legends]
 
 $inset_legend_depth = 1.0;

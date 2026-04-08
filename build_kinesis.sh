@@ -7,8 +7,8 @@ OUTPUT_DIR="${1:-output/kinesis}"
 
 mkdir -p "$OUTPUT_DIR"
 
-# ROWS="numbers top_alpha home bottom bottom_mods thumbs"
-ROWS="test"
+ROWS="left_top left_bottom right_top right_bottom thumbs"
+# ROWS="test"
 PARTS="body legends"
 
 echo "Rendering Kinesis Advantage2 layout -> $OUTPUT_DIR/"

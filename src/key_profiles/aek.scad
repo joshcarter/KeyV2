@@ -12,8 +12,8 @@ module aek_row(row=3, column = 0) {
   $key_shape_type = "sculpted_square";
   $bottom_key_width = 18.0;
   $bottom_key_height = 18.0;
-  $width_difference = 4;
-  $height_difference = 1;
+  $width_difference = 2;
+  $height_difference = 5;
   $keytop_thickness = 2.0;
   $top_tilt = 0;
   $top_skew = 0;
